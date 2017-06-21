@@ -14,7 +14,7 @@
 
 ## Installation
 At the moment, this extension needs to be installed manually. To do so:
-* Download the extension package.
+* [Download](https://github.com/favrik/com.favrik.membershipperiods/archive/1.0.tar.gz) the extension package.
 * Unzip / untar the package and place it in your configured extensions directory.
 * Reload the Manage Extensions page to see the extension, and click on the Install link.
 
