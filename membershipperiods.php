@@ -123,51 +123,43 @@ function membershipperiods_civicrm_alterSettingsFolders(&$metaDataFolders = NULL
 }
 
 /**
- * Implements of hook_civicrm_entityTypes().
+ * Implements hook_civicrm_entityTypes().
  */
 function membershipperiods_civicrm_entityTypes(&$entityTypes) {
   $entityTypes['CRM_Membershipperiods_DAO_FavrikMembershipPeriod'] = array(
     'name' => 'MembershipPeriod',
     'class' => 'CRM_Membershipperiods_DAO_FavrikMembershipPeriod',
-    'table' => 'civicrm_favrikmembershipperiods'
+    'table' => 'civicrm_favrikmembershipperiods',
   );
 }
 
+/**
+ * Implements hook_civicrm_post().
+ */
 function membershipperiods_civicrm_post($op, $objectName, $objectId, &$objectRef) {
-  $handler = new CRM_Membershipperiods_Handler(
-    $op . $objectName,
-    $objectId,
-    $objectRef
+  $method = $op . $objectName;
+  $validMethods = array(
+    'createMembership',
+    'editMembership',
+    'createMembershipPayment',
   );
 
-  $handler->post();
+  if (in_array($method, $validMethods)) {
+    $handler = new CRM_Membershipperiods_Hook_Post($method, $objectRef);
+    $handler->run();
+  }
 }
 
-
-// --- Functions below this ship commented out. Uncomment as required. ---
-
 /**
- * Implements hook_civicrm_preProcess().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_preProcess
- *
-function membershipperiods_civicrm_preProcess($formName, &$form) {
+ * Implements hook_civicrm_buildForm().
+ */
+function membershipperiods_civicrm_buildForm($formName, &$form) {
+  if (
+       $formName === 'CRM_Member_Form_MembershipView'
+    && $form->getAction() === CRM_Core_Action::VIEW
+  ) {
 
-} // */
-
-/**
- * Implements hook_civicrm_navigationMenu().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
- *
-function membershipperiods_civicrm_navigationMenu(&$menu) {
-  _membershipperiods_civix_insert_navigation_menu($menu, NULL, array(
-    'label' => ts('The Page', array('domain' => 'com.favrik.membershipperiods')),
-    'name' => 'the_page',
-    'url' => 'civicrm/the-page',
-    'permission' => 'access CiviReport,access CiviContribute',
-    'operator' => 'OR',
-    'separator' => 0,
-  ));
-  _membershipperiods_civix_navigationMenu($menu);
-} // */
+    $handler = new CRM_Membershipperiods_Hook_BuildForm($form);
+    $handler->run();
+  }
+}

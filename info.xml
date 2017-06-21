@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <extension key="com.favrik.membershipperiods" type="module">
   <file>membershipperiods</file>
-  <name>FIXME</name>
-  <description>FIXME</description>
+  <name>Favrik Membership Periods</name>
+  <description>Creates membership periods on membership creation, and renewal.</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>Favio Manriquez Leon</author>
     <email>favio@favrik.com</email>
   </maintainer>
   <urls>
-    <url desc="Main Extension Page">http://FIXME</url>
-    <url desc="Documentation">http://FIXME</url>
-    <url desc="Support">http://FIXME</url>
+    <url desc="Main Extension Page">https://github.com/favrik/com.favrik.membershipperiods</url>
+    <url desc="Documentation">https://github.com/favrik/com.favrik.membershipperiods</url>
+    <url desc="Support">https://github.com/favrik/com.favrik.membershipperiods</url>
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
   <releaseDate>2017-06-16</releaseDate>
