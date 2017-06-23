@@ -18,6 +18,13 @@ class FavrikMembershipPeriodTest extends \PHPUnit_Framework_TestCase implements 
   private $contact;
 
   /**
+   * Hardcoded financial type id from default database install.
+   *
+   * @var int
+   */
+  private $financialTypeId = 2; // Member dues.
+
+  /**
    * Membership values.
    *
    * @var array
@@ -61,7 +68,7 @@ class FavrikMembershipPeriodTest extends \PHPUnit_Framework_TestCase implements 
     $membershipType = civicrm_api3('MembershipType', 'create', array(
       'domain_id' => $domain['id'],
       'member_of_contact_id' => $this->contact['id'],
-      'financial_type_id' => 2, // Member Dues.
+      'financial_type_id' => $this->financialTypeId,
       'duration_unit' => "month",
       'duration_interval' => 1,
       'period_type' => "rolling",
@@ -135,6 +142,26 @@ class FavrikMembershipPeriodTest extends \PHPUnit_Framework_TestCase implements 
 
     $this->assertEquals(1, count($lastPeriod['values']));
     $this->assertEquals('2017-06-05', $lastPeriod['values'][0]['end_date']);
+  }
+
+  public function testContributionIsTracked() {
+    $contribution = civicrm_api3('Contribution', 'create', array(
+      'sequential' => 1,
+      'financial_type_id' => $this->financialTypeId,
+      'total_amount' => 100,
+      'contact_id' => $this->contact['id'],
+    ));
+
+    civicrm_api3('MembershipPayment', 'create', array(
+      'sequential' => 1,
+      'membership_id' => $this->membership['id'],
+      'contribution_id' => $contribution['id'],
+    ));
+
+    $period = civicrm_api3('FavrikMembershipPeriod', 'getsingle',
+      array('sequential' => 1, 'membership_id' => $this->membership['id']));
+
+    $this->assertEquals($contribution['id'], $period['contribution_id']);
   }
 
   /**
